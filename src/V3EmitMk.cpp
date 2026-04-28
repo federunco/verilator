@@ -567,6 +567,10 @@ public:
         of.puts("VM_TRACE_VCD = ");
         of.puts(v3Global.opt.traceEnabledVcd() ? "1" : "0");
         of.puts("\n");
+        of.puts("# SCA tracing mode?  0/1 (from --trace-sca)\n");
+        of.puts("VM_TRACE_SCA = ");
+        of.puts(v3Global.opt.traceSca() ? "1" : "0");
+        of.puts("\n");
 
         of.puts("\n### Object file lists...\n");
         for (int support = 0; support < 3; ++support) {

@@ -1004,6 +1004,19 @@ void V3Options::notify() VL_MT_DISABLED {
     if (ntraces > 1)  // Issue #5813
         cmdfl->v3error("Only one of --trace-fst, --trace-saif or --trace--vcd may be used");
 
+    // SCA trace validation
+    if (traceSca()) {
+        if (m_scaTrigger.empty()) {
+            cmdfl->v3error("--trace-sca requires --sca-trigger <signal>");
+        }
+        if (m_scaScope.empty()) {
+            cmdfl->v3error("--trace-sca requires --sca-scope <module>");
+        }
+        // SCA tracing needs all signals accessible at runtime via scope/variable tables
+        m_vpi = true;
+        m_publicFlatRW = true;
+    }
+
     if (protectIds()) {
         if (allPublic()) {
             // We always call protect() on names, we don't check if public or not
@@ -1824,6 +1837,19 @@ void V3Options::parseOptsList(FileLine* fl, const string& optdir, int argc,
     DECL_OPTION("-no-trace-top", Set, &m_noTraceTop);
     DECL_OPTION("-trace-underscore", OnOff, &m_traceUnderscore);
     DECL_OPTION("-trace-vcd", CbCall, [this]() { m_traceEnabledVcd = true; });
+
+    DECL_OPTION("-trace-sca", OnOff, &m_traceSca);
+    DECL_OPTION("-sca-trigger", Set, &m_scaTrigger);
+    DECL_OPTION("-sca-type", CbVal, [this, fl](const char* valp) {
+        if (!std::strcmp(valp, "hw") || !std::strcmp(valp, "hd")) {
+            m_scaType = valp;
+        } else {
+            fl->v3error("Unknown setting for --sca-type: '"
+                        << valp << "'\n"
+                        << fl->warnMore() << "... Suggest 'hw' or 'hd'");
+        }
+    });
+    DECL_OPTION("-sca-scope", Set, &m_scaScope);
 
     DECL_OPTION("-U", CbPartialMatch, &V3PreShell::undef);
     DECL_OPTION("-underline-zero", OnOff, &m_underlineZero).undocumented();  // Deprecated

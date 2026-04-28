@@ -93,6 +93,7 @@ VK_CPPFLAGS_ALWAYS += \
   -DVM_TRACE_FST=$(VM_TRACE_FST) \
   -DVM_TRACE_VCD=$(VM_TRACE_VCD) \
   -DVM_TRACE_SAIF=$(VM_TRACE_SAIF) \
+  -DVM_TRACE_SCA=$(VM_TRACE_SCA) \
   $(CFG_CXXFLAGS_NO_UNUSED) \
 
 ifeq ($(CFG_WITH_CCWARN),yes)  # Local... Else don't burden users

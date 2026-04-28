@@ -304,6 +304,7 @@ private:
     bool m_traceParams = true;      // main switch: --trace-params
     bool m_traceStructs = false;    // main switch: --trace-structs
     bool m_noTraceTop = false;      // main switch: --no-trace-top
+    bool m_traceSca = false;        // main switch: --trace-sca
     bool m_traceUnderscore = false; // main switch: --trace-underscore
     bool m_underlineZero = false;   // main switch: --underline-zero; undocumented old Verilator 2
     bool m_verilate = true;         // main switch: --verilate
@@ -374,6 +375,9 @@ private:
     string      m_pipeFilter;   // main switch: --pipe-filter
     string      m_prefix;       // main switch: --prefix
     string      m_protectKey;   // main switch: --protect-key
+    string      m_scaTrigger;   // main switch: --sca-trigger
+    string      m_scaType = "hw";  // main switch: --sca-type (hw|hd)
+    string      m_scaScope;     // main switch: --sca-scope
     string      m_topModule;    // main switch: --top-module
     string      m_unusedRegexp; // main switch: --unused-regexp
     string      m_waiverOutput;  // main switch: --waiver-output {filename}
@@ -554,6 +558,10 @@ public:
     bool traceEnabledVcd() const { return m_traceEnabledVcd; }
     bool traceParams() const { return m_traceParams; }
     bool traceStructs() const { return m_traceStructs; }
+    bool traceSca() const { return m_traceSca; }
+    string scaTrigger() const { return m_scaTrigger; }
+    string scaType() const { return m_scaType; }
+    string scaScope() const { return m_scaScope; }
     bool traceUnderscore() const { return m_traceUnderscore; }
     bool main() const { return m_main; }
     bool outFormatOk() const { return m_outFormatOk; }

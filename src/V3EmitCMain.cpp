@@ -56,6 +56,9 @@ private:
 
         puts("#include \"verilated.h\"\n");
         puts("#include \"" + EmitCUtil::topClassName() + ".h\"\n");
+        if (v3Global.opt.traceSca()) {
+            puts("#include \"verilated_sca.h\"\n");
+        }
         if (v3Global.opt.debugRuntimeTimeout()) {
             puts("\n");
             puts("#include <csignal>\n");
@@ -92,10 +95,23 @@ private:
              + EmitCUtil::topClassName() + "{contextp.get(), \"" + topName + "\"}};\n");
         puts("\n");
 
+        if (v3Global.opt.traceSca()) {
+            puts("// Setup SCA tracing (since Verilated with --trace-sca)\n");
+            puts("VerilatedSca vlSca{contextp.get(), \""
+                 + v3Global.opt.scaTrigger() + "\", \""
+                 + v3Global.opt.scaScope() + "\", \""
+                 + v3Global.opt.scaType() + "\"};\n");
+            puts("\n");
+        }
+
         puts("// Simulate until $finish\n");
         puts("while (VL_LIKELY(!contextp->gotFinish())) {\n");
         puts(/**/ "// Evaluate model\n");
         puts(/**/ "topp->eval();\n");
+        if (v3Global.opt.traceSca()) {
+            puts(/**/ "// SCA trace sampling\n");
+            puts(/**/ "vlSca.sample(contextp->time());\n");
+        }
         puts(/**/ "// Advance time\n");
         if (v3Global.rootp()->delaySchedulerp() || v3Global.opt.timing()) {
             puts("if (!topp->eventsPending()) break;\n");
